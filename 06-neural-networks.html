@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neural Networks · IS328 Flashcards</title>
+<style>
+:root{
+  --bg:#f4f1ea; --panel:#fffdf8; --ink:#1d1b16; --muted:#6b665b; --line:#e2dccf;
+  --accent:#3d5a99; --accent-soft:#e5eaf6;
+  --theory:#2f6f9f; --formula:#7a4fb0; --calc:#b5562a; --scenario:#2e7d5b;
+  --good:#2e7d5b; --bad:#b5562a; --code:#f1ece1;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 28px rgba(40,30,10,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16150f; --panel:#201e17; --ink:#efe9dc; --muted:#a59e8e; --line:#36322a;
+    --accent-soft:#2b2a22; --code:#2a2820;
+    --theory:#7db4dd; --formula:#b99be0; --calc:#e8916a; --scenario:#6fc39c; --good:#6fc39c; --bad:#e8916a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16150f; --panel:#201e17; --ink:#efe9dc; --muted:#a59e8e; --line:#36322a;
+  --accent-soft:#2b2a22; --code:#2a2820;
+  --theory:#7db4dd; --formula:#b99be0; --calc:#e8916a; --scenario:#6fc39c; --good:#6fc39c; --bad:#e8916a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.kicker{font:600 12px/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{margin:6px 0 0;font-size:clamp(24px,5vw,34px);line-height:1.1;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:15px;margin-top:4px}
+.toplinks{display:flex;gap:8px;font:14px ui-sans-serif,system-ui,sans-serif}
+.toplinks a,.toplinks button{color:var(--muted);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:6px 10px;border-radius:8px;cursor:pointer;font:inherit}
+.toplinks a:hover,.toplinks button:hover{color:var(--ink)}
+.ui{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 10px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:5px 12px;font:13px ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{opacity:.7;margin-left:4px}
+.spacer{flex:1}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 4px}
+.progress>i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font:13px ui-sans-serif,system-ui,sans-serif}
+.stage{perspective:1600px;margin-top:14px}
+.card{position:relative;width:100%;min-height:380px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:26px 26px 22px;display:flex;flex-direction:column;overflow:auto}
+.back{transform:rotateY(180deg)}
+.tag{align-self:flex-start;font:600 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:6px;border:1px solid currentColor}
+.t-theory{color:var(--theory)} .t-formula{color:var(--formula)} .t-calc{color:var(--calc)} .t-scenario{color:var(--scenario)}
+.front .q{font-size:clamp(20px,3.6vw,26px);line-height:1.35;margin:auto 0;padding:18px 0}
+.front .hint{color:var(--muted);font:13px ui-sans-serif,system-ui,sans-serif}
+.back .qsmall{color:var(--muted);font-size:14px;margin:12px 0 8px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.ans{font-size:16.5px}
+.ans p{margin:.5em 0}
+.ans ul,.ans ol{margin:.4em 0;padding-left:1.3em}
+.ans li{margin:.2em 0}
+.f{display:block;background:var(--code);border-left:3px solid var(--accent);padding:8px 12px;margin:8px 0;border-radius:6px;font:15px/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;overflow-x:auto;white-space:pre-wrap}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font:.92em ui-monospace,Menlo,Consolas,monospace}
+table.t{border-collapse:collapse;margin:8px 0;font:14px ui-sans-serif,system-ui,sans-serif;max-width:100%;display:block;overflow-x:auto}
+table.t th,table.t td{border:1px solid var(--line);padding:4px 9px;text-align:center}
+table.t th{background:var(--accent-soft)}
+.key{color:var(--accent);font-weight:700}
+.tip{margin-top:10px;padding:8px 12px;border-radius:8px;background:var(--accent-soft);font:14px/1.5 ui-sans-serif,system-ui,sans-serif}
+.tip b{color:var(--accent)}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:11px 10px;border-radius:10px;font:600 14px ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rate{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btn.good{color:var(--good)} .btn.bad{color:var(--bad)}
+.status{font:600 12px ui-sans-serif,system-ui,sans-serif;margin-left:auto}
+.status.k{color:var(--good)} .status.r{color:var(--bad)}
+.keys{color:var(--muted);font:12px ui-sans-serif,system-ui,sans-serif;text-align:center;margin-top:12px}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;font:11px ui-monospace,monospace;background:var(--panel)}
+.list{display:none;margin-top:16px}
+.list.on{display:block}
+.litem{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:10px 0}
+.litem h3{font-size:18px;margin:8px 0 6px;line-height:1.35}
+.empty{text-align:center;color:var(--muted);padding:60px 10px;font-family:ui-sans-serif,system-ui,sans-serif}
+svg text{font-family:ui-sans-serif,system-ui,sans-serif}
+@media (max-width:560px){.face{padding:18px 16px}.card{min-height:440px}.keys{display:none}}
+@media print{.bar,.stage,.controls,.rate,.keys,.toplinks,.progress,.meta{display:none!important}.list{display:block!important}.litem{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="kicker">IS328 · Topic 6 of 12</div>
+      <h1>Neural Networks</h1>
+      <div class="sub">Theory: neurons, multilayer feed-forward networks and backpropagation</div>
+    </div>
+    <div class="toplinks">
+      <a href="index.html">All topics</a>
+      <button id="theme" type="button" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <div class="bar ui" id="filters"></div>
+  <div class="bar ui">
+    <button class="chip" id="shuffle" type="button">Shuffle</button>
+    <button class="chip" id="onlyReview" type="button" aria-pressed="false">Only “review again”</button>
+    <button class="chip" id="listView" type="button" aria-pressed="false">List view</button>
+    <span class="spacer"></span>
+    <button class="chip" id="reset" type="button">Reset marks</button>
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+  <div class="meta"><span id="pos"></span><span id="score"></span></div>
+
+  <div id="studyArea">
+    <div class="stage"><div class="card" id="card" tabindex="0" aria-live="polite">
+      <div class="face front" id="front"></div>
+      <div class="face back" id="back"></div>
+    </div></div>
+    <div class="controls">
+      <button class="btn" id="prev" type="button">← Prev</button>
+      <button class="btn primary" id="flip" type="button">Flip</button>
+      <button class="btn" id="next" type="button">Next →</button>
+    </div>
+    <div class="rate">
+      <button class="btn bad" id="markR" type="button">✗ Review again</button>
+      <button class="btn good" id="markK" type="button">✓ Got it</button>
+    </div>
+    <div class="keys"><kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>1</kbd> review again · <kbd>2</kbd> got it</div>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+const CARDS = [{"type": "theory", "q": "Describe the structure of an artificial neuron (unit).", "a": "<ol><li>Inputs x<sub>1<\/sub>…x<sub>n<\/sub>, each with a weight w<sub>ij<\/sub><\/li><li>Net input = weighted sum + bias: <span class=\"f\">I<sub>j<\/sub> = Σ<sub>i<\/sub> w<sub>ij<\/sub> O<sub>i<\/sub> + θ<sub>j<\/sub><\/span><\/li><li>Output = activation function applied to the net input, e.g. sigmoid: <span class=\"f\">O<sub>j<\/sub> = 1 / (1 + e<sup>−I<sub>j<\/sub><\/sup>)<\/span><\/li><\/ol><p>The bias θ acts as a threshold that shifts the activation.<\/p>"}, {"type": "theory", "q": "What is a multilayer feed-forward neural network?", "a": "<ul><li><b>Input layer<\/b> – one unit per (normalised) attribute; passes values on<\/li><li>One or more <b>hidden layers<\/b> – weighted, non-linear units<\/li><li><b>Output layer<\/b> – one unit per class (or one for 2 classes)<\/li><\/ul><p><b>Feed-forward<\/b>: no cycles — signals flow input → output. <b>Fully connected<\/b>: each unit feeds every unit in the next layer. With enough hidden units it can approximate any function (universal approximator).<\/p>"}, {"type": "theory", "q": "Why are non-linear activation functions (e.g. sigmoid) needed?", "a": "<p>Without non-linearity, stacked layers collapse into a single linear transformation, so the network could only learn linear boundaries. The sigmoid (logistic) “squashes” any input into (0,1), is differentiable (needed for gradient descent), and its derivative is simple: O(1−O). Others: tanh, ReLU.<\/p>"}, {"type": "theory", "q": "Why can't a single-layer perceptron learn XOR?", "a": "<p>A single perceptron draws one straight line (hyperplane) — it can only separate <b>linearly separable<\/b> classes. XOR's positive points (0,1),(1,0) and negative points (0,0),(1,1) cannot be split by one line. A <b>hidden layer<\/b> lets the network combine several boundaries.<\/p>"}, {"type": "theory", "q": "Outline the backpropagation algorithm.", "a": "<ol><li><b>Initialise<\/b> weights and biases to small random numbers (e.g. −0.5 to 0.5)<\/li><li>For each training tuple:<ul><li><b>Propagate inputs forward<\/b>: compute I<sub>j<\/sub> and O<sub>j<\/sub> for every hidden and output unit<\/li><li><b>Backpropagate the error<\/b>: compute Err for output units, then hidden units<\/li><li><b>Update<\/b> weights and biases<\/li><\/ul><\/li><li>Repeat over <b>epochs<\/b> until a terminating condition: all Δw below a threshold, % misclassified below a threshold, or max epochs reached<\/li><\/ol><p>It is gradient descent minimising the mean-squared error.<\/p>"}, {"type": "formula", "q": "Give the backpropagation error and update formulas.", "a": "<span class=\"f\">Output unit: Err<sub>j<\/sub> = O<sub>j<\/sub>(1 − O<sub>j<\/sub>)(T<sub>j<\/sub> − O<sub>j<\/sub>)\nHidden unit: Err<sub>j<\/sub> = O<sub>j<\/sub>(1 − O<sub>j<\/sub>) Σ<sub>k<\/sub> Err<sub>k<\/sub> w<sub>jk<\/sub>\nWeight:  Δw<sub>ij<\/sub> = (l) Err<sub>j<\/sub> O<sub>i<\/sub>     w<sub>ij<\/sub> = w<sub>ij<\/sub> + Δw<sub>ij<\/sub>\nBias:    Δθ<sub>j<\/sub> = (l) Err<sub>j<\/sub>         θ<sub>j<\/sub> = θ<sub>j<\/sub> + Δθ<sub>j<\/sub><\/span><p>T = target, O = actual output, O(1−O) = sigmoid derivative, l = learning rate.<\/p>"}, {"type": "calc", "q": "Han Example 9.1: x = (1, 0, 1), target 1. w14=0.2, w24=0.4, w34=−0.5, θ4=−0.4; w15=−0.3, w25=0.1, w35=0.2, θ5=0.2; w46=−0.3, w56=−0.2, θ6=0.1. Forward pass and output error?", "a": "<span class=\"f\">I4 = 0.2 + 0 − 0.5 − 0.4 = -0.7      O4 = 1/(1+e^0.7)  = 0.332\nI5 = −0.3 + 0 + 0.2 + 0.2 = 0.1     O5 = 1/(1+e^−0.1) = 0.525\nI6 = (−0.3)(0.332) + (−0.2)(0.525) + 0.1 = -0.105\nO6 = 0.474\n\nErr6 = 0.474(1 − 0.474)(1 − 0.474) = 0.1312\nErr5 = 0.525(1 − 0.525)(0.1311)(−0.2) = -0.0065\nErr4 = 0.332(1 − 0.332)(0.1311)(−0.3) = -0.0087\n\nl = 0.9:  w46 = −0.3 + 0.9(0.1311)(0.332) = -0.261\n          θ6  = 0.1 + 0.9(0.1311)       = 0.218<\/span>"}, {"type": "theory", "q": "What is the learning rate and how does it affect training?", "a": "<p>A constant in (0, 1) controlling the step size of weight updates.<\/p><ul><li>Too small → very slow learning<\/li><li>Too large → oscillates between poor solutions / may diverge<\/li><\/ul><p>Rule of thumb: l = 1/t, where t is the number of iterations so far. Helps avoid getting stuck in local minima.<\/p>"}, {"type": "theory", "q": "Case (online) updating vs epoch (batch) updating?", "a": "<p><b>Case updating<\/b>: weights and biases updated after <i>each<\/i> tuple — more common, usually more accurate.<\/p><p><b>Epoch updating<\/b>: increments accumulated and applied once after all tuples (one epoch) have been presented.<\/p>"}, {"type": "theory", "q": "Why should inputs be normalised for a neural network? How are nominal attributes encoded?", "a": "<p>Normalise numeric inputs to [0.0, 1.0] to speed learning and stop large-range attributes dominating.<\/p><p>Discrete/nominal: one input unit per value (one-hot). E.g. A ∈ {a0, a1, a2} → three input units I0, I1, I2; A = a1 sets I1 = 1, others 0.<\/p>"}, {"type": "theory", "q": "List the strengths and weaknesses of neural networks.", "a": "<p>✓ High tolerance of noisy data; can classify patterns not seen in training; well suited to continuous inputs/outputs; learns complex non-linear relationships; inherently parallel.<\/p><p>✗ Long training time; many parameters chosen empirically (topology, learning rate); <b>poor interpretability (“black box”)<\/b> — knowledge is hidden in weights; risk of overfitting and local minima.<\/p><p>Interpretability can be improved by rule extraction, network pruning, and sensitivity analysis.<\/p>"}, {"type": "theory", "q": "How do you decide the network topology?", "a": "<p>No clear rules — trial and error. Choose number of hidden layers and units per layer, train, test accuracy on validation data, and adjust. Input units = number of (encoded) attributes; output units = number of classes (one unit if two classes).<\/p>"}, {"type": "theory", "q": "How can overfitting be prevented in neural networks?", "a": "<ul><li>Use a validation set and stop training when validation error starts rising (<b>early stopping<\/b>)<\/li><li>Fewer hidden units / weight pruning<\/li><li>Weight decay (regularisation), more training data, dropout<\/li><\/ul>"}];
+const KEY = "is328-fc-06-neural-networks";
+const LABEL = {theory:"Theory", formula:"Formula", calc:"Calculation", scenario:"Scenario"};
+let marks = {};
+try { marks = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e) { marks = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e){} }
+
+let filter = "all", onlyReview = false, order = CARDS.map((_,i)=>i), deck = [], idx = 0;
+const $ = id => document.getElementById(id);
+
+function buildFilters(){
+  const counts = {all:CARDS.length};
+  CARDS.forEach(c => counts[c.type] = (counts[c.type]||0)+1);
+  const f = $("filters"); f.innerHTML = "";
+  ["all","theory","formula","calc","scenario"].forEach(t=>{
+    if(!counts[t]) return;
+    const b = document.createElement("button");
+    b.className="chip"; b.type="button";
+    b.setAttribute("aria-pressed", t===filter);
+    b.innerHTML = (t==="all"?"All cards":LABEL[t]) + '<span class="n">'+counts[t]+'</span>';
+    b.onclick = ()=>{ filter=t; buildFilters(); rebuild(); };
+    f.appendChild(b);
+  });
+}
+function rebuild(keepCard){
+  const cur = deck[idx];
+  deck = order.filter(i => (filter==="all"||CARDS[i].type===filter) && (!onlyReview || marks[i]==="r"));
+  idx = keepCard!=null && deck.includes(cur) ? deck.indexOf(cur) : 0;
+  render(); renderList();
+}
+function tagHTML(t){ return '<span class="tag t-'+t+'">'+LABEL[t]+'</span>'; }
+function statusHTML(i){
+  if(marks[i]==="k") return '<span class="status k">✓ Got it</span>';
+  if(marks[i]==="r") return '<span class="status r">✗ Review again</span>';
+  return "";
+}
+function render(){
+  const card = $("card"); card.classList.remove("flipped");
+  const known = Object.values(marks).filter(v=>v==="k").length;
+  $("score").textContent = known + " / " + CARDS.length + " marked “got it”";
+  $("prog").style.width = (100*known/CARDS.length) + "%";
+  if(!deck.length){
+    $("front").innerHTML = '<div class="empty">No cards here.<br>'+(onlyReview?"Nothing marked “review again” — nice.":"")+'</div>';
+    $("back").innerHTML = ""; $("pos").textContent = "0 / 0"; return;
+  }
+  const i = deck[idx], c = CARDS[i];
+  $("pos").textContent = "Card " + (idx+1) + " / " + deck.length;
+  setTimeout(()=>{ // swap content after flip-back starts so the answer never flashes
+    $("front").innerHTML = '<div style="display:flex;align-items:center;gap:8px">'+tagHTML(c.type)+statusHTML(i)+'</div><div class="q">'+c.q+'</div><div class="hint">Click card or press Space to reveal</div>';
+    $("back").innerHTML = '<div style="display:flex;align-items:center;gap:8px">'+tagHTML(c.type)+statusHTML(i)+'</div><div class="qsmall">'+c.q+'</div><div class="ans">'+c.a+'</div>';
+    $("front").scrollTop = 0; $("back").scrollTop = 0;
+    card.style.height = "auto";
+    const h = Math.max(380, $("front").scrollHeight, $("back").scrollHeight);
+    card.style.height = h + "px";
+  }, card.dataset.init ? 120 : 0);
+  card.dataset.init = 1;
+}
+function renderList(){
+  $("list").innerHTML = deck.map((i,n)=>{
+    const c = CARDS[i];
+    return '<div class="litem">'+tagHTML(c.type)+' '+statusHTML(i)+'<h3>'+(n+1)+'. '+c.q+'</h3><div class="ans">'+c.a+'</div></div>';
+  }).join("") || '<div class="empty">No cards here.</div>';
+}
+function flip(){ if(deck.length) $("card").classList.toggle("flipped"); }
+function move(d){ if(!deck.length) return; idx = (idx + d + deck.length) % deck.length; render(); }
+function mark(v){
+  if(!deck.length) return;
+  const i = deck[idx]; marks[i] = v; save();
+  if(onlyReview && v==="k"){ rebuild(); return; }
+  move(1); renderList();
+}
+$("card").onclick = e => { if(!e.target.closest("a")) flip(); };
+$("flip").onclick = flip; $("prev").onclick = ()=>move(-1); $("next").onclick = ()=>move(1);
+$("markK").onclick = ()=>mark("k"); $("markR").onclick = ()=>mark("r");
+$("shuffle").onclick = ()=>{ for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];} rebuild(); };
+$("onlyReview").onclick = function(){ onlyReview=!onlyReview; this.setAttribute("aria-pressed",onlyReview); rebuild(); };
+$("listView").onclick = function(){ const on = this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); $("list").classList.toggle("on",on); $("studyArea").style.display = on?"none":""; };
+$("reset").onclick = ()=>{ marks={}; save(); rebuild(true); };
+$("theme").onclick = ()=>{ const r=document.documentElement; const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; r.dataset.theme = dark?"light":"dark"; };
+document.addEventListener("keydown", e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.key===" "||e.key==="Enter"){ e.preventDefault(); flip(); }
+  else if(e.key==="ArrowRight") move(1);
+  else if(e.key==="ArrowLeft") move(-1);
+  else if(e.key==="1") mark("r");
+  else if(e.key==="2") mark("k");
+});
+buildFilters(); rebuild();
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy-Preserving Data Mining · IS328 Flashcards</title>
+<style>
+:root{
+  --bg:#f4f1ea; --panel:#fffdf8; --ink:#1d1b16; --muted:#6b665b; --line:#e2dccf;
+  --accent:#4a4a4a; --accent-soft:#ebe8e2;
+  --theory:#2f6f9f; --formula:#7a4fb0; --calc:#b5562a; --scenario:#2e7d5b;
+  --good:#2e7d5b; --bad:#b5562a; --code:#f1ece1;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 8px 28px rgba(40,30,10,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16150f; --panel:#201e17; --ink:#efe9dc; --muted:#a59e8e; --line:#36322a;
+    --accent-soft:#2b2a22; --code:#2a2820;
+    --theory:#7db4dd; --formula:#b99be0; --calc:#e8916a; --scenario:#6fc39c; --good:#6fc39c; --bad:#e8916a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16150f; --panel:#201e17; --ink:#efe9dc; --muted:#a59e8e; --line:#36322a;
+  --accent-soft:#2b2a22; --code:#2a2820;
+  --theory:#7db4dd; --formula:#b99be0; --calc:#e8916a; --scenario:#6fc39c; --good:#6fc39c; --bad:#e8916a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;min-height:100vh}
+.wrap{max-width:860px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.kicker{font:600 12px/1 ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{margin:6px 0 0;font-size:clamp(24px,5vw,34px);line-height:1.1;font-weight:700;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:15px;margin-top:4px}
+.toplinks{display:flex;gap:8px;font:14px ui-sans-serif,system-ui,sans-serif}
+.toplinks a,.toplinks button{color:var(--muted);text-decoration:none;border:1px solid var(--line);background:var(--panel);padding:6px 10px;border-radius:8px;cursor:pointer;font:inherit}
+.toplinks a:hover,.toplinks button:hover{color:var(--ink)}
+.ui{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0 10px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:5px 12px;font:13px ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.chip .n{opacity:.7;margin-left:4px}
+.spacer{flex:1}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0 4px}
+.progress>i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font:13px ui-sans-serif,system-ui,sans-serif}
+.stage{perspective:1600px;margin-top:14px}
+.card{position:relative;width:100%;min-height:380px;transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.2,1);cursor:pointer}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:26px 26px 22px;display:flex;flex-direction:column;overflow:auto}
+.back{transform:rotateY(180deg)}
+.tag{align-self:flex-start;font:600 11px/1 ui-sans-serif,system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:6px;border:1px solid currentColor}
+.t-theory{color:var(--theory)} .t-formula{color:var(--formula)} .t-calc{color:var(--calc)} .t-scenario{color:var(--scenario)}
+.front .q{font-size:clamp(20px,3.6vw,26px);line-height:1.35;margin:auto 0;padding:18px 0}
+.front .hint{color:var(--muted);font:13px ui-sans-serif,system-ui,sans-serif}
+.back .qsmall{color:var(--muted);font-size:14px;margin:12px 0 8px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.ans{font-size:16.5px}
+.ans p{margin:.5em 0}
+.ans ul,.ans ol{margin:.4em 0;padding-left:1.3em}
+.ans li{margin:.2em 0}
+.f{display:block;background:var(--code);border-left:3px solid var(--accent);padding:8px 12px;margin:8px 0;border-radius:6px;font:15px/1.6 ui-monospace,"SF Mono",Menlo,Consolas,monospace;overflow-x:auto;white-space:pre-wrap}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font:.92em ui-monospace,Menlo,Consolas,monospace}
+table.t{border-collapse:collapse;margin:8px 0;font:14px ui-sans-serif,system-ui,sans-serif;max-width:100%;display:block;overflow-x:auto}
+table.t th,table.t td{border:1px solid var(--line);padding:4px 9px;text-align:center}
+table.t th{background:var(--accent-soft)}
+.key{color:var(--accent);font-weight:700}
+.tip{margin-top:10px;padding:8px 12px;border-radius:8px;background:var(--accent-soft);font:14px/1.5 ui-sans-serif,system-ui,sans-serif}
+.tip b{color:var(--accent)}
+.controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:11px 10px;border-radius:10px;font:600 14px ui-sans-serif,system-ui,sans-serif;cursor:pointer}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.rate{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.btn.good{color:var(--good)} .btn.bad{color:var(--bad)}
+.status{font:600 12px ui-sans-serif,system-ui,sans-serif;margin-left:auto}
+.status.k{color:var(--good)} .status.r{color:var(--bad)}
+.keys{color:var(--muted);font:12px ui-sans-serif,system-ui,sans-serif;text-align:center;margin-top:12px}
+kbd{border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;font:11px ui-monospace,monospace;background:var(--panel)}
+.list{display:none;margin-top:16px}
+.list.on{display:block}
+.litem{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:10px 0}
+.litem h3{font-size:18px;margin:8px 0 6px;line-height:1.35}
+.empty{text-align:center;color:var(--muted);padding:60px 10px;font-family:ui-sans-serif,system-ui,sans-serif}
+svg text{font-family:ui-sans-serif,system-ui,sans-serif}
+@media (max-width:560px){.face{padding:18px 16px}.card{min-height:440px}.keys{display:none}}
+@media print{.bar,.stage,.controls,.rate,.keys,.toplinks,.progress,.meta{display:none!important}.list{display:block!important}.litem{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="kicker">IS328 · Topic 12 of 12</div>
+      <h1>Privacy-Preserving Data Mining</h1>
+      <div class="sub">Theory applied to scenarios</div>
+    </div>
+    <div class="toplinks">
+      <a href="index.html">All topics</a>
+      <button id="theme" type="button" aria-label="Toggle theme">◐</button>
+    </div>
+  </header>
+
+  <div class="bar ui" id="filters"></div>
+  <div class="bar ui">
+    <button class="chip" id="shuffle" type="button">Shuffle</button>
+    <button class="chip" id="onlyReview" type="button" aria-pressed="false">Only “review again”</button>
+    <button class="chip" id="listView" type="button" aria-pressed="false">List view</button>
+    <span class="spacer"></span>
+    <button class="chip" id="reset" type="button">Reset marks</button>
+  </div>
+  <div class="progress"><i id="prog"></i></div>
+  <div class="meta"><span id="pos"></span><span id="score"></span></div>
+
+  <div id="studyArea">
+    <div class="stage"><div class="card" id="card" tabindex="0" aria-live="polite">
+      <div class="face front" id="front"></div>
+      <div class="face back" id="back"></div>
+    </div></div>
+    <div class="controls">
+      <button class="btn" id="prev" type="button">← Prev</button>
+      <button class="btn primary" id="flip" type="button">Flip</button>
+      <button class="btn" id="next" type="button">Next →</button>
+    </div>
+    <div class="rate">
+      <button class="btn bad" id="markR" type="button">✗ Review again</button>
+      <button class="btn good" id="markK" type="button">✓ Got it</button>
+    </div>
+    <div class="keys"><kbd>Space</kbd> flip · <kbd>←</kbd><kbd>→</kbd> move · <kbd>1</kbd> review again · <kbd>2</kbd> got it</div>
+  </div>
+  <div class="list" id="list"></div>
+</div>
+
+<script>
+const CARDS = [{"type": "theory", "q": "What is privacy-preserving data mining (PPDM)?", "a": "<p>Obtaining valid data mining results <b>without disclosing the underlying sensitive data values<\/b>. Also called privacy-enhanced or privacy-sensitive data mining.<\/p><p>Most methods <b>transform<\/b> the data, reducing granularity (e.g. generalising individuals to groups). Fundamental <b>trade-off: information loss vs privacy<\/b> — more privacy means less useful results.<\/p>"}, {"type": "theory", "q": "List the main categories of PPDM methods (Han §13.4.2).", "a": "<ol><li><b>Randomisation<\/b> – add noise to mask values<\/li><li><b>k-anonymity and l-diversity<\/b> – alter records so individuals can't be uniquely identified<\/li><li><b>Distributed privacy preservation<\/b> – data split across sites (horizontal/vertical), share only limited info via secure protocols<\/li><li><b>Downgrading the effectiveness of mining results<\/b> – hide sensitive rules, distort models<\/li><li><b>Differential privacy<\/b> – output barely changes whether or not one individual is in the data<\/li><\/ol>"}, {"type": "theory", "q": "Explain randomisation (perturbation) methods.", "a": "<p>Add random <b>noise<\/b> to attribute values (e.g. age + random value from a known distribution). Noise must be large enough that individual — especially sensitive — values can't be recovered, but the <b>aggregate distribution<\/b> can still be reconstructed, so mining works on the aggregate.<\/p><p>✓ Simple; can be applied at collection time, no trusted server needed. ✗ Reduced accuracy; individual records are useless; outliers can still be vulnerable.<\/p>"}, {"type": "theory", "q": "Define quasi-identifiers and k-anonymity.", "a": "<p><b>Quasi-identifiers (QI)<\/b>: attributes that are not unique IDs alone but can identify a person when combined and linked with external data (e.g. ZIP + birth date + gender identified ~87% of US people).<\/p><p><b>k-anonymity<\/b>: every record is indistinguishable from at least <b>k − 1<\/b> others on the QI attributes, i.e. each QI combination (equivalence class) appears ≥ k times. Achieved by <b>generalisation<\/b> (age 27 → 20–29, ZIP 12345 → 123**) and <b>suppression<\/b> (remove values/records).<\/p>"}, {"type": "scenario", "q": "Is this released table 3-anonymous? Is it safe?<table class=\"t\"><tr><th>ZIP<\/th><th>Age<\/th><th>Sex<\/th><th>Disease<\/th><\/tr><tr><td>123**<\/td><td>2*<\/td><td>*<\/td><td>Flu<\/td><\/tr><tr><td>123**<\/td><td>2*<\/td><td>*<\/td><td>Flu<\/td><\/tr><tr><td>123**<\/td><td>2*<\/td><td>*<\/td><td>Flu<\/td><\/tr><tr><td>456**<\/td><td>3*<\/td><td>*<\/td><td>Cancer<\/td><\/tr><tr><td>456**<\/td><td>3*<\/td><td>*<\/td><td>Diabetes<\/td><\/tr><tr><td>456**<\/td><td>3*<\/td><td>*<\/td><td>Flu<\/td><\/tr><\/table>", "a": "<p>QIs = ZIP, Age, Sex. Two equivalence classes: (123**, 2*, *) with 3 records and (456**, 3*, *) with 3 records → every class has ≥ 3 → <b>3-anonymous ✓<\/b>.<\/p><p><b>But not safe<\/b>: in the first class every record has Flu — a <b>homogeneity attack<\/b>. If an attacker knows their 25-year-old neighbour in ZIP 12345 is in the data, they learn she has Flu without identifying her row. The second class has 3 distinct diseases → <b>3-diverse<\/b>; the first is only 1-diverse.<\/p>"}, {"type": "theory", "q": "What are the weaknesses of k-anonymity, and how does l-diversity address them?", "a": "<p><b>Homogeneity attack<\/b>: all records in an equivalence class share the same sensitive value → it can be inferred.<\/p><p><b>Background-knowledge attack<\/b>: attacker uses outside knowledge to rule out values.<\/p><p><b>l-diversity<\/b>: each equivalence class must contain at least <b>l well-represented distinct sensitive values<\/b> — enforcing intra-group diversity. (Further refinement: <b>t-closeness<\/b> — the distribution of sensitive values in each class must be close to the overall distribution.)<\/p>"}, {"type": "theory", "q": "Horizontal vs vertical data partitioning in distributed PPDM?", "a": "<p><b>Horizontal<\/b>: each site holds different <b>records<\/b> with the same attributes (e.g. several hospitals each with their own patients).<\/p><p><b>Vertical<\/b>: each site holds different <b>attributes<\/b> for the same entities (e.g. a bank and a retailer both hold data on the same customers).<\/p><p>Sites use cryptographic/secure multi-party computation protocols (e.g. secure sum) to compute aggregate results without revealing their raw data.<\/p>"}, {"type": "scenario", "q": "Three hospitals want to build a joint model predicting readmission, but law prevents them sharing patient records. Which PPDM approach fits?", "a": "<p><b>Distributed privacy preservation<\/b> with <b>horizontally partitioned<\/b> data — same attributes, different patients. Use secure multi-party computation (e.g. secure sum of counts for naïve Bayes or decision-tree split statistics) or federated learning, so only aggregate statistics/model updates leave each hospital. Individual records stay private while the model benefits from all data.<\/p>"}, {"type": "scenario", "q": "A bank and a supermarket both have data on the same customers and want to find associations between spending and loan default without exchanging their databases. Which approach?", "a": "<p><b>Vertically partitioned<\/b> distributed PPDM: each party holds different attributes of the same individuals. Use secure protocols (e.g. secure scalar product to count joint support of itemsets spanning both sites) to mine association rules while revealing only the final rules/aggregate counts.<\/p>"}, {"type": "scenario", "q": "A government agency wants to publish a census micro-data file for researchers. What should it do?", "a": "<ol><li>Remove explicit identifiers (name, ID number)<\/li><li>Identify quasi-identifiers (ZIP, birth date, sex, occupation…)<\/li><li>Apply <b>k-anonymity<\/b> via generalisation/suppression, and <b>l-diversity<\/b> for sensitive attributes (income, health)<\/li><li>Or add noise / release synthetic data / use differential privacy for statistics<\/li><li>Evaluate the information loss vs re-identification risk trade-off<\/li><\/ol>"}, {"type": "theory", "q": "What does “downgrading the effectiveness of data mining results” mean? Give a scenario.", "a": "<p>Even if raw data are hidden, the <b>output<\/b> (association rules, classifiers) may reveal sensitive information. Solution: modify the data or results so sensitive patterns disappear — e.g. <b>hiding sensitive association rules<\/b> (lowering their support/confidence below thresholds) or slightly distorting a classification model.<\/p><p>Scenario: a supplier sharing sales data with a retailer hides the rule that reveals which competitor's products its customers also buy.<\/p>"}, {"type": "theory", "q": "Explain differential privacy.", "a": "<p>For any two datasets that differ in <b>one individual<\/b>, a differentially private algorithm produces approximately the <b>same output distribution<\/b>. So the presence or absence of any single person barely affects the result — they gain plausible deniability.<\/p><p>Typically achieved by adding calibrated noise (e.g. Laplace noise) to query answers or model training. Privacy budget ε: smaller ε = stronger privacy, more noise. Strong, mathematically provable guarantee, independent of attacker background knowledge.<\/p>"}, {"type": "scenario", "q": "A fitness app wants to report how many users in each city exercised today, but individual users must not be identifiable even if an attacker knows everyone else's data. Which technique?", "a": "<p><b>Differential privacy<\/b>: add Laplace noise to each city's count before publishing. Because the guarantee holds regardless of background knowledge, an attacker who knows all other users still can't tell whether one specific user is included. Small cities get relatively more noise — the utility trade-off.<\/p>"}, {"type": "scenario", "q": "An online survey asks a sensitive yes/no question (e.g. drug use). How can individual answers be protected while still estimating the true proportion?", "a": "<p><b>Randomised response<\/b> (a randomisation method): each respondent flips a coin — heads: answer truthfully; tails: answer “yes” at random with known probability. No individual answer can be trusted, but because the noise process is known, the population proportion can be estimated:<\/p><span class=\"f\">P(yes observed) = 0.5 × π + 0.5 × 0.5   →   π = 2 × P(yes) − 0.5<\/span><p>e.g. 40% observed yes → π = 0.8 − 0.5 = 30% true rate.<\/p>"}, {"type": "theory", "q": "List privacy and security measures beyond PPDM algorithms.", "a": "<ul><li>Data security-enhancing techniques: <b>encryption<\/b>, multilevel security models, access control (only authorised users)<\/li><li>Anonymisation of identifiers; data minimisation<\/li><li>Intrusion detection<\/li><li>Policies, legislation and informed consent (fair information practices: purpose specification, use limitation, openness)<\/li><\/ul>"}];
+const KEY = "is328-fc-12-privacy";
+const LABEL = {theory:"Theory", formula:"Formula", calc:"Calculation", scenario:"Scenario"};
+let marks = {};
+try { marks = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e) { marks = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e){} }
+
+let filter = "all", onlyReview = false, order = CARDS.map((_,i)=>i), deck = [], idx = 0;
+const $ = id => document.getElementById(id);
+
+function buildFilters(){
+  const counts = {all:CARDS.length};
+  CARDS.forEach(c => counts[c.type] = (counts[c.type]||0)+1);
+  const f = $("filters"); f.innerHTML = "";
+  ["all","theory","formula","calc","scenario"].forEach(t=>{
+    if(!counts[t]) return;
+    const b = document.createElement("button");
+    b.className="chip"; b.type="button";
+    b.setAttribute("aria-pressed", t===filter);
+    b.innerHTML = (t==="all"?"All cards":LABEL[t]) + '<span class="n">'+counts[t]+'</span>';
+    b.onclick = ()=>{ filter=t; buildFilters(); rebuild(); };
+    f.appendChild(b);
+  });
+}
+function rebuild(keepCard){
+  const cur = deck[idx];
+  deck = order.filter(i => (filter==="all"||CARDS[i].type===filter) && (!onlyReview || marks[i]==="r"));
+  idx = keepCard!=null && deck.includes(cur) ? deck.indexOf(cur) : 0;
+  render(); renderList();
+}
+function tagHTML(t){ return '<span class="tag t-'+t+'">'+LABEL[t]+'</span>'; }
+function statusHTML(i){
+  if(marks[i]==="k") return '<span class="status k">✓ Got it</span>';
+  if(marks[i]==="r") return '<span class="status r">✗ Review again</span>';
+  return "";
+}
+function render(){
+  const card = $("card"); card.classList.remove("flipped");
+  const known = Object.values(marks).filter(v=>v==="k").length;
+  $("score").textContent = known + " / " + CARDS.length + " marked “got it”";
+  $("prog").style.width = (100*known/CARDS.length) + "%";
+  if(!deck.length){
+    $("front").innerHTML = '<div class="empty">No cards here.<br>'+(onlyReview?"Nothing marked “review again” — nice.":"")+'</div>';
+    $("back").innerHTML = ""; $("pos").textContent = "0 / 0"; return;
+  }
+  const i = deck[idx], c = CARDS[i];
+  $("pos").textContent = "Card " + (idx+1) + " / " + deck.length;
+  setTimeout(()=>{ // swap content after flip-back starts so the answer never flashes
+    $("front").innerHTML = '<div style="display:flex;align-items:center;gap:8px">'+tagHTML(c.type)+statusHTML(i)+'</div><div class="q">'+c.q+'</div><div class="hint">Click card or press Space to reveal</div>';
+    $("back").innerHTML = '<div style="display:flex;align-items:center;gap:8px">'+tagHTML(c.type)+statusHTML(i)+'</div><div class="qsmall">'+c.q+'</div><div class="ans">'+c.a+'</div>';
+    $("front").scrollTop = 0; $("back").scrollTop = 0;
+    card.style.height = "auto";
+    const h = Math.max(380, $("front").scrollHeight, $("back").scrollHeight);
+    card.style.height = h + "px";
+  }, card.dataset.init ? 120 : 0);
+  card.dataset.init = 1;
+}
+function renderList(){
+  $("list").innerHTML = deck.map((i,n)=>{
+    const c = CARDS[i];
+    return '<div class="litem">'+tagHTML(c.type)+' '+statusHTML(i)+'<h3>'+(n+1)+'. '+c.q+'</h3><div class="ans">'+c.a+'</div></div>';
+  }).join("") || '<div class="empty">No cards here.</div>';
+}
+function flip(){ if(deck.length) $("card").classList.toggle("flipped"); }
+function move(d){ if(!deck.length) return; idx = (idx + d + deck.length) % deck.length; render(); }
+function mark(v){
+  if(!deck.length) return;
+  const i = deck[idx]; marks[i] = v; save();
+  if(onlyReview && v==="k"){ rebuild(); return; }
+  move(1); renderList();
+}
+$("card").onclick = e => { if(!e.target.closest("a")) flip(); };
+$("flip").onclick = flip; $("prev").onclick = ()=>move(-1); $("next").onclick = ()=>move(1);
+$("markK").onclick = ()=>mark("k"); $("markR").onclick = ()=>mark("r");
+$("shuffle").onclick = ()=>{ for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];} rebuild(); };
+$("onlyReview").onclick = function(){ onlyReview=!onlyReview; this.setAttribute("aria-pressed",onlyReview); rebuild(); };
+$("listView").onclick = function(){ const on = this.getAttribute("aria-pressed")!=="true"; this.setAttribute("aria-pressed",on); $("list").classList.toggle("on",on); $("studyArea").style.display = on?"none":""; };
+$("reset").onclick = ()=>{ marks={}; save(); rebuild(true); };
+$("theme").onclick = ()=>{ const r=document.documentElement; const dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; r.dataset.theme = dark?"light":"dark"; };
+document.addEventListener("keydown", e=>{
+  if(e.target.tagName==="INPUT") return;
+  if(e.key===" "||e.key==="Enter"){ e.preventDefault(); flip(); }
+  else if(e.key==="ArrowRight") move(1);
+  else if(e.key==="ArrowLeft") move(-1);
+  else if(e.key==="1") mark("r");
+  else if(e.key==="2") mark("k");
+});
+buildFilters(); rebuild();
+</script>
+</body>
+</html>
